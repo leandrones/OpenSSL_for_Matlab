@@ -63,13 +63,17 @@ int main() {
   BIO_printf(outbio, "ECC Key type: %s\n", OBJ_nid2sn(EC_GROUP_get_curve_name(ecgrp)));
 
   /* ---------------------------------------------------------- *
-   * Here we print the private/public key data in PEM format.   *
+   * Here we save the private/public key data in PEM format.   *
    * ---------------------------------------------------------- */
-  if(!PEM_write_bio_PrivateKey(outbio, pkey, NULL, NULL, 0, 0, NULL))
-    BIO_printf(outbio, "Error writing private key data in PEM format");
+  FILE *f1;
+  f1 = fopen("PrivateKey.pem", "wb");
+  PEM_write_PrivateKey(f1, pkey, NULL, NULL, 0, NULL, NULL);
+  fclose(f1);
 
-  if(!PEM_write_bio_PUBKEY(outbio, pkey))
-    BIO_printf(outbio, "Error writing public key data in PEM format");
+  FILE *f2;
+  f2 = fopen("PublicKey.pem", "wb");
+  PEM_write_PUBKEY(f2, pkey);
+  fclose(f2);
 
   /* ---------------------------------------------------------- *
    * Free up all structures                                     *
