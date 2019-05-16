@@ -2,15 +2,23 @@
 #include <openssl/err.h>
 #include <openssl/ec.h>
 #include <openssl/pem.h>
+#include "mex.h"
 
 #define ECCTYPE  "prime256v1"
 
-int main() {
-
+void mexFunction(int nlhs, mxArray *plhs[], int nrhs, 
+  const mxArray *prhs[]) {
+   
+  /* ---------------------------------------------------------- *
+   * Variable declaration                                       *
+   * ---------------------------------------------------------- */
+    
   BIO               *outbio = NULL;
   EC_KEY            *myecc  = NULL;
   EVP_PKEY          *pkey   = NULL;
   int               eccgrp;
+  char              *publickey_file_name = "PublicKey.pem";
+  char              *privatkey_file_name = "PrivateKey.pem";
 
   /* ---------------------------------------------------------- *
    * These function calls initialize openssl for correct work.  *
@@ -66,12 +74,12 @@ int main() {
    * Here we save the private/public key data in PEM format.   *
    * ---------------------------------------------------------- */
   FILE *f1;
-  f1 = fopen("PrivateKey.pem", "wb");
+  f1 = fopen(privatkey_file_name, "wb");
   PEM_write_PrivateKey(f1, pkey, NULL, NULL, 0, NULL, NULL);
   fclose(f1);
 
   FILE *f2;
-  f2 = fopen("PublicKey.pem", "wb");
+  f2 = fopen(publickey_file_name, "wb");
   PEM_write_PUBKEY(f2, pkey);
   fclose(f2);
 
