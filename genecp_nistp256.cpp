@@ -6,6 +6,23 @@
 
 #define ECCTYPE  "prime256v1"
 
+
+/*
+ *  mexFunction:  Matlab entry function into this C code
+ *  Inputs: 
+ *      int nlhs:   Number of left hand arguments (output)
+ *      mxArray *plhs[]:   The left hand arguments (output)
+ *      int nrhs:   Number of right hand arguments (inputs)
+ *      const mxArray *prhs[]:   The right hand arguments (inputs)
+ *
+ * Notes:
+ *      (Left)  goes_out = foo(goes_in);    (Right)
+ */
+
+
+// Compile with
+// mex genecp_nistp256.c -lssl -lcrypto -L/usr/local/opt/openssl/lib -I/usr/local/opt/openssl/include
+
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, 
   const mxArray *prhs[]) {
    
@@ -23,7 +40,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
   /* ---------------------------------------------------------- *
    * These function calls initialize openssl for correct work.  *
    * ---------------------------------------------------------- */
-  OpenSSL_add_all_algorithms();
+  //OpenSSL_add_all_algorithms();
   ERR_load_BIO_strings();
   ERR_load_crypto_strings();
 

@@ -1,6 +1,6 @@
 %% Generating keys
 tic 
-[priv_key, pub_key] = genecp_nistp256();
+genecp_nistp256();
 t1 = toc;
 fprintf('Time required to generate keys is : %fs', t1)
 %% Signing file with previous keys
