@@ -93,7 +93,14 @@ int main(){
   if (msg)
     {
       /* Initialise the DigestSign operation - SHA-256 has been selected as the message digest function in this example */
-      if(1 != EVP_DigestSignInit(mdctx, NULL, EVP_sha256(), NULL, pkey)) goto err;
+      if(1 != EVP_DigestSignInit(mdctx, NULL, EVP_sha256(), NULL, pkey)) goto err; // Vérifier si ça hashe bien
+      // Vérifier que l'output soit bien cohérent avec la fonction de hachahge
+      // n octets -> 256/8 -> 32
+      // 2 parties à ECDSA
+      // 32 octets x 2 -> r = 32 ; s = 32
+      // clé privé  32 octets
+      // clé publique 32 x 2 octets
+      // montrer que tout est bien cohérent en termes d'algos
       
       /* Call update with the message */
       if(1 != EVP_DigestSignUpdate(mdctx, msg, strlen(msg))) goto err;
