@@ -7,7 +7,7 @@ the equivalent algorithms present in the OpenSSL's
 C API in order to evaluate the feasability of this implementation.
 
 ## TO DO List
-+ Functions in C
++ Functions in C/C++
   1. Generate asymmetric key pair (Angelo)
   2. Sign file with private key (Matheus)
   3. Verify signature with public key (Leandro)
