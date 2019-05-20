@@ -138,5 +138,4 @@ int main(){
   EC_KEY_free(myecc);
   BIO_free_all(inbio);
 
-  exit(0);
 }
