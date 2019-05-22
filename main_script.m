@@ -11,7 +11,7 @@ t2 = toc;
 fprintf('Time required for signature is : %fs', t2)
 %% Verify signature
 tic 
-verif_state = verif_signature(pub_key_file, file);
+verif_state = verify_signature(pub_key_file, file);
 t3 = toc;
 fprintf('Times required to verify signature : %fs\n\n', t3)
 %% Ploting glabal parameters
