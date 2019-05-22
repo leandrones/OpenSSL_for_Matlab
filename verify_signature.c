@@ -49,8 +49,8 @@ int main(){
    * Read private key from file                                 *
    * ---------------------------------------------------------- */
   FILE *f1;
-  f1 = fopen("PrivateKey.pem", "rb");
-  PEM_read_PrivateKey(f1, &pkey, NULL, NULL);
+  f1 = fopen("PublicKey.pem", "rb");
+  PEM_read_PUBKEY(f1, &pkey, NULL, NULL);
   fclose(f1);
   /* -------------------------------------------------------- *
    * Now we show how to extract EC-specifics from the key     *
