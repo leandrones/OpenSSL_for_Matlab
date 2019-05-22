@@ -3,23 +3,26 @@
 #include <openssl/ec.h>
 #include <openssl/pem.h>
 #include <string.h>
+#include "mex.h"
 
 #define ECCTYPE  "prime256v1"
 #define filename "file_to_sign.txt"
 
-/* Still working on the signing part, just made sure the files are 
+/* Still working on the signing part, just made sure the files are
 read correctly and all variables are there */
 
-int main(){
+//int main(){
+void mexFunction(int nlhs, mxArray *plhs[], int nrhs, 
+  const mxArray *prhs[]){
 
-  BIO               *inbio = NULL;
-  EVP_PKEY          *pkey   = NULL;
-  EC_KEY            *myecc  = NULL;
-  EVP_MD_CTX        *mdctx = NULL;
-  unsigned char     *sig = NULL;
-  long unsigned int slen;
-  int               ret = 0;
-  int               eccgrp;
+  BIO                  *inbio = NULL;
+  EVP_PKEY             *pkey   = NULL;
+  EC_KEY               *myecc  = NULL;
+  EVP_MD_CTX           *mdctx = NULL;
+  unsigned char        *sig = NULL;
+  size_t               slen;
+  int                  ret = 0;
+  int                  eccgrp;
 
   /* ---------------------------------------------------------- *
    * These function calls initialize openssl for correct work.  *
@@ -48,10 +51,33 @@ int main(){
   /* ---------------------------------------------------------- *
    * Read private key from file                                 *
    * ---------------------------------------------------------- */
-  FILE *f1;
-  f1 = fopen("PrivateKey.pem", "rb");
-  PEM_read_PrivateKey(f1, &pkey, NULL, NULL);
-  fclose(f1);
+  FILE *fkey;
+  fkey = fopen("PrivateKey.pem", "rb");
+  PEM_read_PrivateKey(fkey, &pkey, NULL, NULL);
+  //PEM_read_bio_PrivateKey(inbio, &pkey, NULL, NULL);
+  fclose(fkey);
+
+  //printf("My message: %s\n", pkey);
+
+  //char * privatekey = NULL;
+  //long mylength;
+  //if (fkey)
+  //{
+  //fseek (fkey, 0, SEEK_END);
+  //mylength = ftell (fkey);
+  //fseek (fkey, 0, SEEK_SET);
+  //privatekey = malloc( sizeof (unsigned char) * (mylength));
+  //if (privatekey)
+  //{
+  //fread (privatekey, 1, mylength, fkey);
+  //PEM_read_PrivateKey(fkey, &pkey, NULL, NULL);
+  //printf("Length: %ld\n", mylength);
+  //}
+  //
+  //fclose (fkey);
+  //}
+
+
   /* -------------------------------------------------------- *
    * Now we show how to extract EC-specifics from the key     *
    * ---------------------------------------------------------*/
@@ -66,7 +92,7 @@ int main(){
 
   /* Create the Message Digest Context */
   if(!(mdctx = EVP_MD_CTX_create())) goto err;
-  
+
   /* ---------------------------------------------------------- *
    * This reads the contents of the file to be signed           *
    * ---------------------------------------------------------- */
@@ -86,6 +112,7 @@ int main(){
       fclose (f);
     }
 
+  //printf("My message: %s\n", msg);
   /* ---------------------------------------------------------- *
    * If there are no errors, this signs the contents of the file*
    * This will return a digest of the file                      *
@@ -93,7 +120,7 @@ int main(){
   if (msg)
     {
       /* Initialise the DigestSign operation - SHA-256 has been selected as the message digest function in this example */
-      if(1 != EVP_DigestSignInit(mdctx, NULL, EVP_sha256(), NULL, pkey)) goto err; // Vérifier si ça hashe bien
+      if (1 != EVP_DigestSignInit(mdctx, NULL, EVP_sha256(), NULL, pkey)) goto err; // Vérifier si ça hashe bien
       // Vérifier que l'output soit bien cohérent avec la fonction de hachahge
       // n octets -> 256/8 -> 32
       // 2 parties à ECDSA
@@ -101,42 +128,42 @@ int main(){
       // clé privé  32 octets
       // clé publique 32 x 2 octets
       // montrer que tout est bien cohérent en termes d'algos
-      
+
       /* Call update with the message */
       if(1 != EVP_DigestSignUpdate(mdctx, msg, strlen(msg))) goto err;
-      
+
       /* Finalise the DigestSign operation */
       /* First call EVP_DigestSignFinal with a NULL sig parameter to obtain the length of the */
       /* signature. Length is returned in slen */
-      
+
       if(1 != EVP_DigestSignFinal(mdctx, NULL, &slen)) goto err;
-      
+
       /* Allocate memory for the signature based on size in slen */
       if(!(sig = OPENSSL_malloc(sizeof(unsigned char) * (slen)))) goto err;
-      
+
       /* Obtain the signature */
       if(1 != EVP_DigestSignFinal(mdctx, sig, &slen)) goto err;
 
-      printf("%s",sig);
-      
       /* Success */
-      ret = 1;
-      
+     if(!PEM_write_bio_PrivateKey(inbio, pkey, NULL, NULL, 0, 0, NULL))
+     BIO_printf( inbio , "Error writing private key data in PEM format" );
+     ret = 1;
+
     err:
       if(ret != 1)
 	{
 	  /* Do some error handling */
 	}
-    } 
+    }
 
   /* ---------------------------------------------------------- *
    * Free up all structures                                     *
    * ---------------------------------------------------------- */
-  if(*sig && !ret) OPENSSL_free(sig);
-  if(mdctx) EVP_MD_CTX_destroy(mdctx);
-  EVP_PKEY_free(pkey);
-  EC_KEY_free(myecc);
-  BIO_free_all(inbio);
+  //if(*sig && !ret) OPENSSL_free(sig);
+  //if(mdctx) EVP_MD_CTX_destroy(mdctx);
+  //EVP_PKEY_free(pkey);
+  //EC_KEY_free(myecc);
+  //BIO_free_all(inbio);
 
   exit(0);
 }

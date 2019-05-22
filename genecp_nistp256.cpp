@@ -1,8 +1,9 @@
+#include "mex.h"
 #include <openssl/bio.h>
 #include <openssl/err.h>
 #include <openssl/ec.h>
 #include <openssl/pem.h>
-#include "mex.h"
+
 
 #define ECCTYPE  "prime256v1"
 
