@@ -76,14 +76,14 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
      * We need to reinitialize myecc since the pointer has      *
      * has been freed in EVP_PKEY_assign_EC_KEY                 *
      * ---------------------------------------------------------*/
-    myecc = EVP_PKEY_get1_EC_KEY(pkey);
-    const EC_GROUP *ecgrp = EC_KEY_get0_group(myecc);
+    //myecc = EVP_PKEY_get1_EC_KEY(pkey);
+    //const EC_GROUP *ecgrp = EC_KEY_get0_group(myecc);
     
     /* ---------------------------------------------------------- *
      * Here we print the key length, and extract the curve type.  *
      * ---------------------------------------------------------- */
-    mexPrintf("ECC Key type: %s\n", OBJ_nid2sn(EC_GROUP_get_curve_name(ecgrp)));
-    mexPrintf("ECC Key size: %d bit\n", EVP_PKEY_bits(pkey));
+    //mexPrintf("ECC Key type: %s\n", OBJ_nid2sn(EC_GROUP_get_curve_name(ecgrp)));
+    //mexPrintf("ECC Key size: %d bit\n", EVP_PKEY_bits(pkey));
     
     f1 = fopen(privatkey_file_name, "wb");
     PEM_write_PrivateKey(f1, pkey, NULL, NULL, 0, NULL, NULL);
@@ -97,7 +97,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
      * Free up all structures                                     *
      * ---------------------------------------------------------- */
     EVP_PKEY_free(pkey);
-    EC_KEY_free(myecc);
+    //EC_KEY_free(myecc);
     
     /* ---------------------------------------------------------- *
      * Returning file names to matlab                             *
