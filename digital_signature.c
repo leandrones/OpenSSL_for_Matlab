@@ -20,7 +20,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
   EC_KEY               *myecc  = NULL;
   EVP_MD_CTX           *mdctx = NULL;
   unsigned char        *sig = NULL;
-  size_t               slen;
+  long unsigned int    slen;
   int                  ret = 0;
   int                  eccgrp;
 
@@ -143,11 +143,13 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
 
       /* Obtain the signature */
       if(1 != EVP_DigestSignFinal(mdctx, sig, &slen)) goto err;
-
-      /* Success */
-     if(!PEM_write_bio_PrivateKey(inbio, pkey, NULL, NULL, 0, 0, NULL))
-     BIO_printf( inbio , "Error writing private key data in PEM format" );
-     ret = 1;
+      
+      printf("%s\n",sig);
+      
+//       /* Success */
+//      if(!PEM_write_bio_PrivateKey(inbio, pkey, NULL, NULL, 0, 0, NULL))
+//      BIO_printf( inbio , "Error writing private key data in PEM format" );
+//      ret = 1;
 
     err:
       if(ret != 1)
@@ -159,11 +161,10 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
   /* ---------------------------------------------------------- *
    * Free up all structures                                     *
    * ---------------------------------------------------------- */
-  //if(*sig && !ret) OPENSSL_free(sig);
-  //if(mdctx) EVP_MD_CTX_destroy(mdctx);
-  //EVP_PKEY_free(pkey);
-  //EC_KEY_free(myecc);
-  //BIO_free_all(inbio);
+  if(*sig && !ret) OPENSSL_free(sig);
+  if(mdctx) EVP_MD_CTX_destroy(mdctx);
+  EVP_PKEY_free(pkey);
+  EC_KEY_free(myecc);
+  BIO_free_all(inbio);
 
-  exit(0);
 }
