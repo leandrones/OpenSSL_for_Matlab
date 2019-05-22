@@ -1,8 +1,11 @@
 %% Generating keys
-tic 
-[pub_key_file, priv_key_file] = genecp_nistp256();
-t1 = toc;
-fprintf('Time required to generate keys is : %fs\n', t1)
+t1 = 0;
+for i = 1:1000
+    tic 
+    [pub_key_file, priv_key_file] = genecp_nistp256();
+    t1 = t1 + toc;
+end 
+fprintf('Mean time required to generate keys is : %fs\n', t1/1000)
 %% Signing file with previous keys
 file = importdata(file_to_sign.txt);
 tic 
