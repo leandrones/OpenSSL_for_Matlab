@@ -117,16 +117,16 @@ int main(){
       /* Obtain the signature */
       if(1 != EVP_DigestSignFinal(mdctx, sig, &slen)) goto err;
 
-      printf("%s",sig);
+      printf("%s\n",sig);
       
       /* Success */
       ret = 1;
       
     err:
       if(ret != 1)
-	{
-	  /* Do some error handling */
-	}
+      {
+        /* Do some error handling */
+      }
     } 
 
   /* ---------------------------------------------------------- *
