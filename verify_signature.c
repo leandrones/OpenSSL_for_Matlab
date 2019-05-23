@@ -65,7 +65,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
     {
       fseek (f, 0, SEEK_END);
       length = ftell (f);
-      printf("f tell msg = %ld\n",length);
+      // printf("f tell msg = %ld\n",length);
       fseek (f, 0, SEEK_SET);
       msg = malloc (length);
       if (msg)
@@ -82,7 +82,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
     {
       fseek (f, 0, SEEK_END);
       length = ftell (f);
-      printf("f tell sig = %ld\n",length);
+      // printf("f tell sig = %ld\n",length);
       fseek (f, 0, SEEK_SET);
       sig = malloc (length);
       if (sig)
@@ -104,6 +104,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
    * If there are no errors, this hashes the contents of the file*
    * This will return a digest of the file                      *
    * ---------------------------------------------------------- */
+  int verif_result;
   if (msg && sig)
   {
 
@@ -120,10 +121,10 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
     /* Now the Verification is tested. It has output == 1
       if we have a success, 0 if the files are different
       and another value if there was an error */
-    int verif_result =  EVP_DigestVerifyFinal(mdctx, sig, slen);
+    verif_result =  EVP_DigestVerifyFinal(mdctx, sig, slen);
     if(1 == verif_result){
       // printf("Verified OK\n");
-      mexPrintf("Verified OK\n");
+      // mexPrintf("Verified OK\n");
     }
     else if(verif_result == 0) {
       // printf("Verification Failure\n");
@@ -144,6 +145,8 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
   }
 
   plhs[0] = mxCreateNumericMatrix(1,1,mxINT32_CLASS,mxREAL);
+  int *data = (int*) mxGetData(plhs[0]);
+  data[0] = verif_result;
   /* ---------------------------------------------------------- *
    * Free up all structures                                     *
    * ---------------------------------------------------------- */
