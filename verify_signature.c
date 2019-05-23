@@ -8,8 +8,8 @@
 // #include "mex.h"
 
 #define ECCTYPE  "prime256v1"
-#define filename "file_to_sign.txt"
-#define signed_file "file_to_sign.txt.sha256"
+// #define filename "file_to_sign.txt"
+// #define signed_file "file_to_sign.txt.sha256"
 
 /* Still working on the signing part, just made sure the files are
 read correctly and all variables are there */
@@ -27,6 +27,13 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
   int                  success = 0;
   int                  eccgrp;
 
+  char *keyFileName;
+  keyFileName = mxArrayToString(prhs[0]);
+  char *filename;
+  filename = mxArrayToString(prhs[1]);
+  char *signed_file;
+  signed_file = mxArrayToString(prhs[2]);
+
   /* ---------------------------------------------------------- *
    * These function calls initialize openssl for correct work.  *
    * ---------------------------------------------------------- */
@@ -41,40 +48,13 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
   // inbio = BIO_new_fp(stdout, BIO_NOCLOSE);
 
   /* ---------------------------------------------------------- *
-   * Create a EC key structure, setting the group type from NID  *
-   * ---------------------------------------------------------- */
-  eccgrp = OBJ_txt2nid(ECCTYPE);
-  myecc = EC_KEY_new_by_curve_name(eccgrp);
-
-  /* -------------------------------------------------------- *
-   * For cert signing, we use  the OPENSSL_EC_NAMED_CURVE flag*
-   * ---------------------------------------------------------*/
-  EC_KEY_set_asn1_flag(myecc, OPENSSL_EC_NAMED_CURVE);
-
-  /* ---------------------------------------------------------- *
    * Read private key from file                                 *
    * ---------------------------------------------------------- */
   FILE *fkey;
-  fkey = fopen("PublicKey.pem", "rb");
+  fkey = fopen(keyFileName, "rb");
   PEM_read_PUBKEY(fkey, &pkey, NULL, NULL);
   //PEM_read_bio_PrivateKey(inbio, &pkey, NULL, NULL);
   fclose(fkey);
-
-
-  /* -------------------------------------------------------- *
-   * Now we show how to extract EC-specifics from the key     *
-   * ---------------------------------------------------------*/
-  myecc = EVP_PKEY_get1_EC_KEY(pkey);
-  const EC_GROUP *ecgrp = EC_KEY_get0_group(myecc);
-
-  /* ---------------------------------------------------------- *
-   * Here we print the key length, and extract the curve type.  *
-   * ---------------------------------------------------------- */
-  BIO_printf(inbio, "ECC Key size: %d bit\n", EVP_PKEY_bits(pkey));
-  BIO_printf(inbio, "ECC Key type: %s\n", OBJ_nid2sn(EC_GROUP_get_curve_name(ecgrp)));
-
-  /* Create the Message Digest Context */
-  if(!(mdctx = EVP_MD_CTX_create())) goto err;
 
   /* ---------------------------------------------------------- *
    * This reads the contents of the original file            *
@@ -90,9 +70,9 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
       fseek (f, 0, SEEK_SET);
       msg = malloc (length);
       if (msg)
-	{
-	  fread (msg, 1, length, f);
-	}
+      {
+        fread (msg, 1, length, f);
+      }
       fclose (f);
     }
   /* ---------------------------------------------------------- *
@@ -107,9 +87,9 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
       fseek (f, 0, SEEK_SET);
       sig = malloc (length);
       if (sig)
-	{
-	  fread (sig, 1, length, f);
-	}
+      {
+        fread (sig, 1, length, f);
+      }
       fclose (f);
     }
   slen = length;
@@ -127,6 +107,10 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
    * ---------------------------------------------------------- */
   if (msg && sig)
     {
+
+      /* Create the Message Digest Context */
+      if(!(mdctx = EVP_MD_CTX_create())) goto err;
+
       /* Initialise the DigestSign operation - SHA-256 has been selected as the message digest function in this example */
       if (1 != EVP_DigestVerifyInit(mdctx, NULL, EVP_sha256(), NULL,pkey)) goto err;
 
@@ -160,10 +144,12 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
   /* ---------------------------------------------------------- *
    * Free up all structures                                     *
    * ---------------------------------------------------------- */
-  if(*sig && !success) OPENSSL_free(sig);
-  if(mdctx) EVP_MD_CTX_destroy(mdctx);
-  EVP_PKEY_free(pkey);
-  EC_KEY_free(myecc);
-  BIO_free_all(inbio);
+  // if(*sig && !success) OPENSSL_free(sig);
+  // if(mdctx) EVP_MD_CTX_destroy(mdctx);
+  // EVP_PKEY_free(pkey);
+  // EC_KEY_free(myecc);
+
+
+  // BIO_free_all(inbio);
 
 }
