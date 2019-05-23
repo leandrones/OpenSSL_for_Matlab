@@ -14,11 +14,11 @@
 /* Still working on the signing part, just made sure the files are
 read correctly and all variables are there */
 
-// int main(){
-void mexFunction(int nlhs, mxArray *plhs[], int nrhs, 
-  const mxArray *prhs[]){
+int main(){
+// void mexFunction(int nlhs, mxArray *plhs[], int nrhs, 
+  // const mxArray *prhs[]){
 
-  // BIO                  *inbio = NULL;
+  BIO                  *inbio = NULL;
   EVP_PKEY             *pkey   = NULL;
   EC_KEY               *myecc  = NULL;
   EVP_MD_CTX           *mdctx = NULL;
@@ -37,8 +37,8 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
   /* ---------------------------------------------------------- *
    * Create the Input/Output BIO's.                             *
    * ---------------------------------------------------------- */
-  // inbio  = BIO_new(BIO_s_file());
-  // inbio = BIO_new_fp(stdout, BIO_NOCLOSE);
+  inbio  = BIO_new(BIO_s_file());
+  inbio = BIO_new_fp(stdout, BIO_NOCLOSE);
 
   /* ---------------------------------------------------------- *
    * Create a EC key structure, setting the group type from NID  *
