@@ -71,7 +71,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
    * If there are no errors, this signs the contents of the file*
    * This will return a digest of the file                      *
    * ---------------------------------------------------------- */
-  if (msg)
+  if (msg != NULL)
     {
 
       /* Create the Message Digest Context */
@@ -95,14 +95,11 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
       /* Obtain the signature */
       if(1 != EVP_DigestSignFinal(mdctx, sig, &slen)) printf("There was an error\n");
 
-      printf("%s\n",sig);
-
-
       FILE * fout = fopen (signature_output, "wb");
       fwrite(sig,1,slen,fout);
       fclose(fout);
 
-      printf("%s\n",sig);
+      // printf("%s\n",sig);
 
     }
 

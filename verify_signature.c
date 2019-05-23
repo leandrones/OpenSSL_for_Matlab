@@ -2,10 +2,9 @@
 #include <openssl/err.h>
 #include <openssl/ec.h>
 #include <openssl/pem.h>
-// #include <openssl/sha.h>
 #include <stdlib.h>
 #include <string.h>
-// #include "mex.h"
+#include "mex.h"
 
 #define ECCTYPE  "prime256v1"
 // #define filename "file_to_sign.txt"
@@ -94,53 +93,57 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
     }
   slen = length;
 
-  printf("My message: %s\n", msg);
-  printf("sig len = %d\n",slen);
-  for (size_t i = 0; i < length; i++)
-  {
-    printf("%c",sig[i]);
-  }
-  printf("\n");
+  // printf("My message: %s\n", msg);
+  // printf("sig len = %d\n",slen);
+  // for (size_t i = 0; i < length; i++)
+  // {
+  //   printf("%c",sig[i]);
+  // }
+  // printf("\n");
   /* ---------------------------------------------------------- *
    * If there are no errors, this hashes the contents of the file*
    * This will return a digest of the file                      *
    * ---------------------------------------------------------- */
   if (msg && sig)
-    {
+  {
 
-      /* Create the Message Digest Context */
-      if(!(mdctx = EVP_MD_CTX_create())) goto err;
+    /* Create the Message Digest Context */
+    if(!(mdctx = EVP_MD_CTX_create())) goto err;
 
-      /* Initialise the DigestSign operation - SHA-256 has been selected as the message digest function in this example */
-      if (1 != EVP_DigestVerifyInit(mdctx, NULL, EVP_sha256(), NULL,pkey)) goto err;
+    /* Initialise the DigestSign operation - SHA-256 has been selected as the message digest function in this example */
+    if (1 != EVP_DigestVerifyInit(mdctx, NULL, EVP_sha256(), NULL,pkey)) goto err;
 
-      /* Call update with the message in plain text */
-      if(1 != EVP_DigestVerifyUpdate(mdctx, msg, strlen(msg))) goto err;
+    /* Call update with the message in plain text */
+    if(1 != EVP_DigestVerifyUpdate(mdctx, msg, strlen(msg))) goto err;
 
-      /* Finalise the DigestVerify operation */
-      /* Now the Verification is tested. It has output == 1
-        if we have a success, 0 if the files are different
-        and another value if there was an error */
-      int verif_result =  EVP_DigestVerifyFinal(mdctx, sig, slen);
-      if(1 == verif_result){
-        printf("Verified OK\n");
-      }
-      else if(verif_result == 0) {
-        printf("Verification Failure\n");
-      }
-      else{
-        goto err;
-      }
-
-     success = 1;
-
-    err:
-      if(success != 1)
-      {
-        printf("There was an error\n");
-      }
+    /* Finalise the DigestVerify operation */
+    /* Now the Verification is tested. It has output == 1
+      if we have a success, 0 if the files are different
+      and another value if there was an error */
+    int verif_result =  EVP_DigestVerifyFinal(mdctx, sig, slen);
+    if(1 == verif_result){
+      // printf("Verified OK\n");
+      mexPrintf("Verified OK\n");
+    }
+    else if(verif_result == 0) {
+      // printf("Verification Failure\n");
+      mexPrintf("Verification Failure\n");
+    }
+    else{
+      goto err;
     }
 
+    success = 1;
+
+  err:
+    if(success != 1)
+    {
+      // printf("There was an error\n");
+      mexPrintf("There was an error\n");
+    }
+  }
+
+  plhs[0] = mxCreateNumericMatrix(1,1,mxINT32_CLASS,mxREAL);
   /* ---------------------------------------------------------- *
    * Free up all structures                                     *
    * ---------------------------------------------------------- */
