@@ -2,10 +2,11 @@
 #include <openssl/err.h>
 #include <openssl/ec.h>
 #include <openssl/pem.h>
+#include <time.h>
 
 #define ECCTYPE    "prime256v1"
 
-int main() {
+void generate() {
     
     /* ---------------------------------------------------------- *
      * Variable declaration                                       *
@@ -64,14 +65,14 @@ int main() {
      * We need to reinitialize myecc since the pointer has      *
      * has been freed in EVP_PKEY_assign_EC_KEY                 *
      * ---------------------------------------------------------*/
-    myecc = EVP_PKEY_get1_EC_KEY(pkey);
-    const EC_GROUP *ecgrp = EC_KEY_get0_group(myecc);
+    //myecc = EVP_PKEY_get1_EC_KEY(pkey);
+    //const EC_GROUP *ecgrp = EC_KEY_get0_group(myecc);
     
     /* ---------------------------------------------------------- *
      * Here we print the key length, and extract the curve type.  *
      * ---------------------------------------------------------- */
-    BIO_printf(outbio, "ECC Key size: %d bit\n", EVP_PKEY_bits(pkey));
-    BIO_printf(outbio, "ECC Key type: %s\n", OBJ_nid2sn(EC_GROUP_get_curve_name(ecgrp)));
+    //BIO_printf(outbio, "ECC Key size: %d bit\n", EVP_PKEY_bits(pkey));
+    //BIO_printf(outbio, "ECC Key type: %s\n", OBJ_nid2sn(EC_GROUP_get_curve_name(ecgrp)));
     
     /* ---------------------------------------------------------- *
      * Here we print the private/public key data in PEM format.   *
@@ -96,8 +97,27 @@ int main() {
      * Free up all structures                                     *
      * ---------------------------------------------------------- */
     EVP_PKEY_free(pkey);
-    EC_KEY_free(myecc);
+    //EC_KEY_free(myecc);
     BIO_free_all(outbio);
+}
+
+
+int main(){
     
-    exit(0);
+    /* ------ Variable initialisation ------- */
+    clock_t start, end;
+    double cpu_time_used;
+    int i;
+ 
+    /* ------------ Start timing ------------ */
+    start = clock();
+    for (i=0; i< 1000; i++){
+        generate();
+    }
+    /* ------------- End timing ------------- */
+    end = clock();
+    cpu_time_used = ((double) (end - start)) / (1000*CLOCKS_PER_SEC);
+    
+    printf("Execution time is %fs", cpu_time_used);
+    
 }
