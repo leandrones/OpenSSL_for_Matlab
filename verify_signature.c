@@ -9,7 +9,7 @@
 
 #define ECCTYPE  "prime256v1"
 #define filename "file_to_sign.txt"
-#define hashed_file "file_to_sign.txt.sha256"
+#define signed_file "file_to_sign.txt.sha256"
 
 /* Still working on the signing part, just made sure the files are
 read correctly and all variables are there */
@@ -22,8 +22,8 @@ int main(){
   EVP_PKEY             *pkey   = NULL;
   EC_KEY               *myecc  = NULL;
   EVP_MD_CTX           *mdctx = NULL;
-  unsigned char        *dig = NULL;
-  long unsigned int    dlen;
+  unsigned char        *sig = NULL;
+  long unsigned int    slen;
   int                  ret = 0;
   int                  eccgrp;
 
@@ -115,13 +115,27 @@ int main(){
       fclose (f);
     }
 
+  f = fopen (signed_file, "rb");
+  if (f)
+    {
+      fseek (f, 0, SEEK_END);
+      length = ftell (f);
+      fseek (f, 0, SEEK_SET);
+      sig = malloc (length);
+      if (sig)
+	{
+	  fread (sig, 1, length, f);
+	}
+      fclose (f);
+    }
+
   //printf("My message: %s\n", msg);
   char sha_output[1024];
   /* ---------------------------------------------------------- *
    * If there are no errors, this hashes the contents of the file*
    * This will return a digest of the file                      *
    * ---------------------------------------------------------- */
-  if (msg)
+  if (msg && sig)
     {
       // SHA256(msg, strlen(msg),sha_output);
 
@@ -136,21 +150,26 @@ int main(){
       // montrer que tout est bien cohérent en termes d'algos
 
       /* Call update with the message */
-      if(1 != EVP_DigestUpdate(mdctx, msg, strlen(msg))) goto err;
+      if(1 != EVP_DigestVerifyUpdate(mdctx, msg, strlen(msg))) goto err;
 
       /* Finalise the DigestSign operation */
       /* First call EVP_DigestSignFinal with a NULL sig parameter to obtain the length of the */
-      /* signature. Length is returned in dlen */
+      /* signature. Length is returned in slen */
 
-      // if(1 != EVP_DigestSignFinal(mdctx, NULL, &dlen)) goto err;
+      if(1 == EVP_DigestVerifyFinal(mdctx, sig, &slen)){
+        printf("Verified OK\n");
+      }
+      else{
+        printf("Files are different!!!\n");
+      }
 
-      /* Allocate memory for the signature based on size in dlen */
-      if(!(dig = OPENSSL_malloc(EVP_MD_size(EVP_sha256())))) goto err;
+      /* Allocate memory for the signature based on size in slen */
+      // if(!(sig = OPENSSL_malloc(sizeof(unsigned char) * (slen)))) goto err;
 
       /* Obtain the signature */
-      if(1 != EVP_DigestFinal_ex(mdctx, dig, &dlen)) goto err;
+      // if(1 != EVP_DigestSignFinal(mdctx, sig, &slen)) goto err;
       
-      printf("%s\n",dig);
+      printf("%s\n",sig);
       
 //       /* Success */
 //      if(!PEM_write_bio_PrivateKey(inbio, pkey, NULL, NULL, 0, 0, NULL))
@@ -167,7 +186,7 @@ int main(){
   /* ---------------------------------------------------------- *
    * Free up all structures                                     *
    * ---------------------------------------------------------- */
-  if(*dig && !ret) OPENSSL_free(dig);
+  if(*sig && !ret) OPENSSL_free(sig);
   if(mdctx) EVP_MD_CTX_destroy(mdctx);
   EVP_PKEY_free(pkey);
   EC_KEY_free(myecc);
