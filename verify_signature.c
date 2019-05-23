@@ -6,6 +6,7 @@
 
 #define ECCTYPE  "prime256v1"
 #define filename "file_to_sign.txt"
+#define hashed_file "file_to_sign.txt.sha256"
 
 /* Still working on the signing part, just made sure the files are 
 read correctly and all variables are there */
