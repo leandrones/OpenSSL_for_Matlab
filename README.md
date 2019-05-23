@@ -15,8 +15,9 @@ C API in order to evaluate the feasability of this implementation.
 + Benchmarking
 
 ## Next week
-+ Presentation (video conference)
-+ Print screens (results)
-+ Verify the functions
-  + Finish/advance as much as possible on the C
-+ Comment/Document code
++ Generate the keys for NIST P-224 et 384
++ (See the key generation in parallel on Matlab)
++ Solve the the different signing outputs
++ Build the file_size x execution_time graph for signing
++ Measure the times for the signature verification
++ Build the file_size x execution_time graph for the verification
