@@ -81,17 +81,16 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
   if (f)
     {
       fseek (f, 0, SEEK_END);
-      length = ftell (f);
-      // printf("f tell sig = %ld\n",length);
+      slen = ftell (f);
+      // printf("f tell sig = %ld\n",slen);
       fseek (f, 0, SEEK_SET);
-      sig = malloc (length);
+      sig = malloc (slen);
       if (sig)
       {
-        fread (sig, 1, length, f);
+        fread (sig, 1, slen, f);
       }
       fclose (f);
     }
-  slen = length;
 
   // printf("My message: %s\n", msg);
   // printf("sig len = %d\n",slen);
@@ -115,7 +114,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
     if (1 != EVP_DigestVerifyInit(mdctx, NULL, EVP_sha256(), NULL,pkey)) goto err;
 
     /* Call update with the message in plain text */
-    if(1 != EVP_DigestVerifyUpdate(mdctx, msg, strlen(msg))) goto err;
+    if(1 != EVP_DigestVerifyUpdate(mdctx, msg, length)) goto err;
 
     /* Finalise the DigestVerify operation */
     /* Now the Verification is tested. It has output == 1
