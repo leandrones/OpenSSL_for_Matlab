@@ -9,12 +9,44 @@
 #define ECCTYPE           "prime256v1"
 #define signature_output  "tosign.txt.sha256"
 
-/* Still working on the signing part, just made sure the files are
-read correctly and all variables are there */
+/*
+ *  mexFunction:  Matlab entry function into this C code
+ *  Inputs:
+ *      int nlhs:   Number of left hand arguments (output)
+ *      mxArray *plhs[]:   The left hand arguments (output)
+ *      int nrhs:   Number of right hand arguments (inputs)
+ *      const mxArray *prhs[]:   The right hand arguments (inputs)
+ *
+ * Notes:
+ *      (Left)  goes_out = foo(goes_in);    (Right)
+ */
+
+// Compile with
+// mex -g genecp_nistp256.c -lssl -lcrypto -L/usr/local/opt/openssl/lib -I/usr/local/opt/openssl/include
+
+void Base64Encode( const unsigned char* buffer, 
+		   size_t length, 
+		   char** base64Text) { 
+  BIO *bio, *b64;
+  BUF_MEM *bufferPtr;
+  b64 = BIO_new(BIO_f_base64());
+  bio = BIO_new(BIO_s_mem());
+  bio = BIO_push(b64, bio);
+  BIO_write(bio, buffer, length);
+  BIO_flush(bio);
+  BIO_get_mem_ptr(bio, &bufferPtr);
+  BIO_set_close(bio, BIO_NOCLOSE);
+  BIO_free_all(bio);
+  *base64Text=(*bufferPtr).data;
+}
 
 //int main(){
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
   const mxArray *prhs[]){
+
+  /* ---------------------------------------------------------- *
+   * Variable declaration                                       *
+   * ---------------------------------------------------------- */
 
   EVP_PKEY             *pkey   = NULL;
   EC_KEY               *myecc  = NULL;
@@ -22,6 +54,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
   unsigned char        *sig = NULL;
   long unsigned int    slen;
   int                  eccgrp;
+  srand (1);
 
   char *keyFileName;
   keyFileName = mxArrayToString(prhs[0]);
@@ -99,8 +132,11 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
       fwrite(sig,1,slen,fout);
       fclose(fout);
 
-      // printf("%s\n",sig);
-
+      char *output;
+      Base64Encode(sig, slen, &output);
+      printf("Signature (Encode base64) ======\n");
+      printf("%s\n",output);
+      printf("================================\n");
     }
 
   /* ---------------------------------------------------------- *
@@ -113,6 +149,9 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
   //mxFree(keyFileName);
   //mxFree(myfilename);
 
+  /* ---------------------------------------------------------- *
+   * Returning file names to matlab                             *
+   * ---------------------------------------------------------- */
   plhs[0] = mxCreateString(signature_output);
 
 }

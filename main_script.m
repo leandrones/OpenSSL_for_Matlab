@@ -7,8 +7,7 @@ for i = 1:1000
 end
 fprintf('Mean time required to generate keys is : %fs\n', t1/1000)
 %% Signing file with previous keys
-%file = importdata(file_to_sign.txt);
-file = 'file_to_sign.txt';
+file = 'tosign.txt';
 tic
 [signature] = digital_signature(priv_key_file,file);
 t2 = toc;
