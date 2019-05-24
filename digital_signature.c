@@ -104,7 +104,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
    * If there are no errors, this signs the contents of the file*
    * This will return a digest of the file                      *
    * ---------------------------------------------------------- */
-  if (msg)
+  if (msg != NULL)
     {
 
       /* Create the Message Digest Context */
