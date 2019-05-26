@@ -72,9 +72,9 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
   /* ---------------------------------------------------------- *
    * Read private key from file                                 *
    * ---------------------------------------------------------- */
-  printf("opening %s\n",keyFileName);
+  printf("Opening %s\n",keyFileName);
   FILE *fkey;
-  fkey = fopen(keyFileName, "rb");
+  fkey = fopen(keyFileName, "r");
   PEM_read_PrivateKey(fkey, &pkey, NULL, NULL);
   fclose(fkey);
 
@@ -85,7 +85,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
    * ---------------------------------------------------------- */
   char * msg = 0;
   long length;
-  FILE * f = fopen (myfilename, "rb");
+  FILE * f = fopen (myfilename, "r");
   if (f)
     {
       fseek (f, 0, SEEK_END);
