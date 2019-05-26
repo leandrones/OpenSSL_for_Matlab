@@ -19,7 +19,7 @@ t3 = toc;
 fprintf('Times required to verify signature : %fs result = %i\n\n', t3, verif_state);
 %% Mean time verify signature
 t3 = 0;
-for i = 1:90
+for i = 1:1000
     tic
     verify_signature(pub_key_file, file,signature);
     t3 = t3 + toc;
