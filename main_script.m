@@ -1,3 +1,4 @@
+buildMex();
 %% Generating keys
 t1 = 0;
 for i = 1:1000
