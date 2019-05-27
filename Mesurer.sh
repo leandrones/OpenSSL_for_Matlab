@@ -3,9 +3,9 @@
 res1=$(date +%s.%N)
 for i in  {0..1000..1}
 do
-     openssl ecparam -name prime256v1 -genkey -noout -out key.pem
-     openssl ec -in key.pem -pubout -out public.pem
+    openssl dgst -sha256 -verify PublicKey.pem -signature file_to_sign.txt.sha256 file_to_sign.txt
 done
+
 res2=$(date +%s.%N)
 
 dt=$(echo "$res2 - $res1" | bc)
