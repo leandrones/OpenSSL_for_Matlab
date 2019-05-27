@@ -43,9 +43,6 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
     pubKeyName = mxArrayToString(prhs[1]);
     privKeyName = mxArrayToString(prhs[2]);
     
-    mexPrintf(curveName);
-    mexPrintf(pubKeyName);
-    mexPrintf(privKeyName);
     /* ---------------------------------------------------------- *
      * These function calls initialize openssl for correct work.  *
      * ---------------------------------------------------------- */
