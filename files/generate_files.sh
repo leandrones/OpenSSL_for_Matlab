@@ -6,5 +6,5 @@
 
 for i in  {1..100..1}
 do
-    dd if=/dev/zero of="output_${i}.dat"  bs=1M  count="${i}"
+    dd if=/dev/urandom of="${i}.txt"  bs=1c  count="${i}"
 done

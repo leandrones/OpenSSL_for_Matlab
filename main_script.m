@@ -7,16 +7,17 @@ for i = 1:1000
 end
 fprintf('Mean time required to generate keys is : %fs\n', t1/1000)
 %% Signing file with previous keys
-file = 'output.dat';
+file = 'machine_specs.md';
+sigfile = 'o.txt';
 tic
-[signature] = digital_signature(priv_key_file,file);
+[signature] = digital_signature(priv_key_file,file,sigfile);
 t2 = toc;
 fprintf('Time required for signature is : %fs\n', t2)
 %% Verify signature
 tic
 verif_state = verify_signature(pub_key_file, file,signature);
 t3 = toc;
-fprintf('Times required to verify signature : %fs result = %i\n\n', t3, verif_state);
+fprintf('Time required to verify signature : %fs result = %i\n\n', t3, verif_state);
 %% Mean time verify signature
 t3 = 0;
 for i = 1:1000
