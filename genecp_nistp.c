@@ -4,8 +4,6 @@
 #include <openssl/pem.h>
 #include "mex.h"
 
-#define ECCTYPE  "prime256v1"
-
 /*
  *  mexFunction:  Matlab entry function into this C code
  *  Inputs:
@@ -28,14 +26,23 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
     /* ---------------------------------------------------------- *
      * Variable declaration                                       *
      * ---------------------------------------------------------- */
-    EC_KEY            *myecc  = NULL;
-    EVP_PKEY          *pkey   = NULL;
-    FILE              *f1     = NULL;
-    FILE              *f2     = NULL;
-    char              *publickey_file_name = "PublicKey.pem";
-    char              *privatkey_file_name = "PrivateKey.pem";
+    EC_KEY            *myecc       = NULL;
+    EVP_PKEY          *pkey        = NULL;
+    FILE              *f1          = NULL;
+    FILE              *f2          = NULL;
+    char              *curveName;
+    char              *pubKeyName;
+    char              *privKeyName;
     int               eccgrp;
-
+    
+    
+    /* ---------------------------------------------------------- *
+     * Getting inputs of mex function                             *
+     * ---------------------------------------------------------- */  
+    curveName = mxArrayToString(prhs[0]);
+    pubKeyName = mxArrayToString(prhs[1]);
+    privKeyName = mxArrayToString(prhs[2]);
+    
     /* ---------------------------------------------------------- *
      * These function calls initialize openssl for correct work.  *
      * ---------------------------------------------------------- */
@@ -46,7 +53,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
     /* ---------------------------------------------------------- *
      * Create a EC key sructure, setting the group type from NID  *
      * ---------------------------------------------------------- */
-    eccgrp = OBJ_txt2nid(ECCTYPE);
+    eccgrp = OBJ_txt2nid(curveName);
     myecc = EC_KEY_new_by_curve_name(eccgrp);
 
     /* -------------------------------------------------------- *
@@ -85,11 +92,11 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
     //mexPrintf("ECC Key type: %s\n", OBJ_nid2sn(EC_GROUP_get_curve_name(ecgrp)));
     //mexPrintf("ECC Key size: %d bit\n", EVP_PKEY_bits(pkey));
 
-    f1 = fopen(privatkey_file_name, "wb");
+    f1 = fopen(privKeyName, "wb");
     PEM_write_PrivateKey(f1, pkey, NULL, NULL, 0, NULL, NULL);
     fclose(f1);
 
-    f2 = fopen(publickey_file_name, "wb");
+    f2 = fopen(pubKeyName, "wb");
     PEM_write_PUBKEY(f2, pkey);
     fclose(f2);
 
@@ -98,10 +105,5 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
      * ---------------------------------------------------------- */
     EVP_PKEY_free(pkey);
     //EC_KEY_free(myecc);
-
-    /* ---------------------------------------------------------- *
-     * Returning file names to matlab                             *
-     * ---------------------------------------------------------- */
-    plhs[0] = mxCreateString(publickey_file_name);
-    plhs[1] = mxCreateString(privatkey_file_name);
+    
 }
