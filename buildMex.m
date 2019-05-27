@@ -13,8 +13,6 @@ function buildMex(enblDbg)
     %   Author:
     %       Anthony Gabrielson (adapted by Leandro Nascimento)
     
-   
-    
     if ~exist('enblDbg','var') || isempty(enblDbg),enblDbg=false; end
     
     filenames = dir('*.c*');

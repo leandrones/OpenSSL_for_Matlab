@@ -1,12 +1,12 @@
+%% Compiling Mex Files
 buildMex();
+%% Choose EC Curve
+[curve, pub_key_file, priv_key_file] = menu_chose_function();
 %% Generating keys
-t1 = 0;
-for i = 1:1000
-    tic
-    [pub_key_file, priv_key_file] = genecp_nistp256();
-    t1 = t1 + toc;
-end
-fprintf('Mean time required to generate keys is : %fs\n', t1/1000)
+tic
+genecp_nistp(curve, pub_key_file, priv_key_file);
+t1 = toc;
+fprintf('Mean time required to generate keys is : %fs\n', t1)
 %% Signing file with previous keys
 file = 'output.dat';
 tic
@@ -15,7 +15,7 @@ t2 = toc;
 fprintf('Time required for signature is : %fs\n', t2)
 %% Verify signature
 tic
-verif_state = verify_signature(pub_key_file, file,signature);
+verif_state = verify_signature(pub_key_file, file, signature);
 t3 = toc;
 fprintf('Times required to verify signature : %fs result = %i\n\n', t3, verif_state);
 %% Mean time verify signature
