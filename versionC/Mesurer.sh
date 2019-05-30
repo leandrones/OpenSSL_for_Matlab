@@ -3,8 +3,7 @@
 res1=$(date +%s.%N)
 for i in  {0..1000..1}
 do
-    openssl ecparam -name prime256v1 -genkey -noout -out key.pem
-    openssl ec -in key.pem -pubout -out public.pem &>/dev/null
+    ./verify_signature_versionC
 done
 
 res2=$(date +%s.%N)
