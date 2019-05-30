@@ -1,0 +1,13 @@
+# For things generated in files/
+files/*.txt
+files/*.bin
+
+# For hashes and keys anywhere
+*.sha256
+*.pem
+
+# For compiled mex files
+*.mex*
+
+# For Emacs' autosaves
+*~
