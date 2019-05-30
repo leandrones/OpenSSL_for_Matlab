@@ -4,10 +4,13 @@ signing_times = zeros(1,100);
 verifying_times = zeros(1,100);
 signing_sizes = linspace(1,100);
 
+%%
 for i = 1:100
-    file = strcat('files/output_',rptgen.toString(i),'.dat');
+    file = strcat('files/output_',rptgen.toString(i),'.txt');
+    signature = strcat('./files/output_',rptgen.toString(i),'.txt.sha256');
+    %file = 'testfile.txt'
     tic
-    [signature] = digital_signature(priv_key_file,file);
+    [signature] = digital_signature(priv_key_file,file,signature);
     signing_times(1,i) = toc; 
     tic
     verif_state = verify_signature(pub_key_file,file,signature)

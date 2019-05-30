@@ -33,6 +33,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
   char *signed_file;
   signed_file = mxArrayToString(prhs[2]);
 
+
   /* ---------------------------------------------------------- *
    * These function calls initialize openssl for correct work.  *
    * ---------------------------------------------------------- */
@@ -74,6 +75,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
       }
       fclose (f);
     }
+
   /* ---------------------------------------------------------- *
    * This reads the contents of the signed file            *
    * ---------------------------------------------------------- */
@@ -91,6 +93,8 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
       }
       fclose (f);
     }
+
+
 
   // printf("My message: %s\n", msg);
   // printf("sig len = %d\n",slen);
@@ -122,7 +126,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
       and another value if there was an error */
     verif_result =  EVP_DigestVerifyFinal(mdctx, sig, slen);
     if(1 == verif_result){
-      // printf("Verified OK\n");
+      //printf("Verified OK\n");
       // mexPrintf("Verified OK\n");
     }
     else if(verif_result == 0) {

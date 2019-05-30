@@ -15,7 +15,7 @@ function buildMex(enblDbg)
     
     if ~exist('enblDbg','var') || isempty(enblDbg),enblDbg=false; end
     
-    filenames = dir('*.c*');
+    filenames = dir('*.c');
     
     options = '';
     if(enblDbg)
