@@ -127,7 +127,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
     verif_result =  EVP_DigestVerifyFinal(mdctx, sig, slen);
     if(1 == verif_result){
       //printf("Verified OK\n");
-      // mexPrintf("Verified OK\n");
+      mexPrintf("Verified OK\n");
     }
     else if(verif_result == 0) {
       // printf("Verification Failure\n");

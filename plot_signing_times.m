@@ -34,5 +34,3 @@ figure(2)
     title('Time to verify a file as function of file size')
     grid minor
     
-    
-    
