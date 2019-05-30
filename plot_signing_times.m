@@ -1,5 +1,8 @@
-[pub_key_file,priv_key_file] = genecp_nistp256();
-
+%% Choose EC Curve
+[curve, pub_key_file, priv_key_file] = menu_chose_function();
+%%
+genecp_nistp(curve, pub_key_file, priv_key_file);
+curve
 signing_times = zeros(1,100);
 verifying_times = zeros(1,100);
 signing_sizes = linspace(1,100);
