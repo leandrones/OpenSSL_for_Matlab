@@ -13,8 +13,6 @@ function buildMex(enblDbg)
     %   Author:
     %       Anthony Gabrielson (adapted by Leandro Nascimento)
     
-   
-    
     if ~exist('enblDbg','var') || isempty(enblDbg),enblDbg=false; end
     
     filenames = dir('*.c*');
@@ -29,7 +27,7 @@ function buildMex(enblDbg)
         options = [' C:\openssl\lib\libeay32.lib -IC:\openssl\include ' options];
     elseif(ismac())
         fprintf(1,'Building Mac...\n');
-        options = [options ' -I/usr/local/ssl/include -lssl -lcrypto '];
+        options = [options ' -L/usr/local/opt/openssl/lib -I/usr/local/opt/openssl/include -lssl -lcrypto '];
     elseif(isunix())
         fprintf(1,'Building UNIX...\n');
         options = [options ' -L/usr/local/opt/openssl/lib -I/usr/local/opt/openssl/include -lssl -lcrypto '];
