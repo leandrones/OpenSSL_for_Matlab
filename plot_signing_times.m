@@ -1,13 +1,21 @@
-[pub_key_file,priv_key_file] = genecp_nistp256();
+%% Compiling Mex Files
+buildMex();
+%% Choose EC Curve
+[curve, pub_key_file, priv_key_file] = menu_chose_function();
+%% Generating keys
+tic
+genecp_nistp(curve, pub_key_file, priv_key_file);
+t1 = toc;
 
-signing_times = zeros(1,100);
-verifying_times = zeros(1,100);
-signing_sizes = linspace(1,100);
+N = 50
+signing_times = zeros(1,N);
+verifying_times = zeros(1,N);
+signing_sizes = 1:N;
 
 %%
-for i = 1:100
-    file = strcat('files/',rptgen.toString(i),'.txt');
-    signature = strcat('files/',rptgen.toString(i),'.sha256');
+for i = 1:N
+    file = strcat('./files/',rptgen.toString(i),'.txt');
+    signature = strcat('./files/',rptgen.toString(i),'.sha256');
     %file = 'testfile.txt'
     tic
     [signature] = digital_signature(priv_key_file,file,signature);
