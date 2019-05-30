@@ -6,8 +6,8 @@ signing_sizes = linspace(1,100);
 
 %%
 for i = 1:100
-    file = strcat('files/output_',rptgen.toString(i),'.txt');
-    signature = strcat('./files/output_',rptgen.toString(i),'.txt.sha256');
+    file = strcat('files/',rptgen.toString(i),'.txt');
+    signature = strcat('files/',rptgen.toString(i),'.sha256');
     %file = 'testfile.txt'
     tic
     [signature] = digital_signature(priv_key_file,file,signature);
