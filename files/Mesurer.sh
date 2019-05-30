@@ -5,9 +5,9 @@
 
 function usage_statement {
     echo "USAGE: $(basename ${0}) -gsv" >&2
-    echo '    -g Generates a ECDSA key pair 100 times, calculates average time' >&2
-    echo '    -s Signs a file 100 times, calculates average time' >&2
-    echo '    -v Verifies a hash 100 times, calculates average time' >&2
+    echo '    -g Generates a ECDSA key pair 1000 times, calculates average time' >&2
+    echo '    -s Signs a file 1000 times, calculates average time' >&2
+    echo '    -v Verifies a signature 1000 times, calculates average time' >&2
     exit 1
 }
 
@@ -58,7 +58,7 @@ then
     dm=$(echo "$dt3/60" | bc)
     ds=$(echo "$dt3-60*$dm" | bc)
     
-    printf "Total generation time: %02.4f ms\n" $ds
+    printf "Average generation time: %02.4f ms\n" $ds
 fi
 
 if [[ "${SIGN}" = 'true' ]]
@@ -79,7 +79,7 @@ then
     dm=$(echo "$dt3/60" | bc)
     ds=$(echo "$dt3-60*$dm" | bc)
     
-    printf "Total signing time: %02.4f ms\n" $ds
+    printf "Average signing time: %02.4f ms\n" $ds
 fi
 
 if [[ "${VERIFY}" = 'true' ]]
@@ -100,5 +100,5 @@ then
     dm=$(echo "$dt3/60" | bc)
     ds=$(echo "$dt3-60*$dm" | bc)
     
-    printf "Total verification time: %02.4f ms\n" $ds
+    printf "Average verification time: %02.4f ms\n" $ds
 fi

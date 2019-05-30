@@ -7,7 +7,8 @@
 #include "mex.h"
 
 #define ECCTYPE           "prime256v1"
-#define signature_output  "tosign.txt.sha256"
+#define COPY_BUFFER_MAXSIZE 1048576
+//#define signaturename "mysignature.txt"
 
 /*
  *  mexFunction:  Matlab entry function into this C code
@@ -60,7 +61,11 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
   keyFileName = mxArrayToString(prhs[0]);
   char *myfilename;
   myfilename = mxArrayToString(prhs[1]);
-  printf("File to sign %s\n",myfilename);
+  printf("File to sign: %s\n",myfilename);
+  char *signaturename;
+  signaturename = mxArrayToString(prhs[2]);
+  printf("File to output: %s\n",signaturename);
+  
 
   /* ---------------------------------------------------------- *
    * These function calls initialize openssl for correct work.  *
@@ -72,9 +77,8 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
   /* ---------------------------------------------------------- *
    * Read private key from file                                 *
    * ---------------------------------------------------------- */
-  printf("Opening %s\n",keyFileName);
   FILE *fkey;
-  fkey = fopen(keyFileName, "r");
+  fkey = fopen(keyFileName, "rb");
   PEM_read_PrivateKey(fkey, &pkey, NULL, NULL);
   fclose(fkey);
 
@@ -84,22 +88,24 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
    * This reads the contents of the file to be signed           *
    * ---------------------------------------------------------- */
   char * msg = 0;
+  //msg = malloc(COPY_BUFFER_MAXSIZE);
   long length;
-  FILE * f = fopen (myfilename, "r");
+  FILE * f = fopen (myfilename, "rb");
   if (f)
     {
       fseek (f, 0, SEEK_END);
       length = ftell (f);
       fseek (f, 0, SEEK_SET);
       msg = malloc (length);
+      //printf("length saved to msg: %ld\n" , length);
       if (msg)
 	{
 	  fread (msg, 1, length, f);
 	}
       fclose (f);
     }
+  //printf("%s\n",msg);
 
-  printf("Contents of file to sign: %s\n", msg);
   /* ---------------------------------------------------------- *
    * If there are no errors, this signs the contents of the file*
    * This will return a digest of the file                      *
@@ -128,31 +134,21 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
       /* Obtain the signature */
       if(1 != EVP_DigestSignFinal(mdctx, sig, &slen)) printf("There was an error\n");
 
-      FILE * fout = fopen (signature_output, "wb");
+      FILE * fout = fopen (signaturename, "w");
       fwrite(sig,1,slen,fout);
       fclose(fout);
 
-      char *output;
-      Base64Encode(sig, slen, &output);
-      printf("Signature (Encode base64) ======\n");
-      printf("%s\n",output);
-      printf("================================\n");
+      //char *output;
+      //Base64Encode(sig, slen, &output);
+      //printf("=====================================\n");
+      //printf("%s",output);
+      //printf("=====================================\n");
     }
 
   /* ---------------------------------------------------------- *
-   * Free up all structures                                     *
+   * Returning file name to matlab                             *
    * ---------------------------------------------------------- */
-  //if(*sig) OPENSSL_free(sig);
-  //if(mdctx) EVP_MD_CTX_destroy(mdctx);
-  //EVP_PKEY_free(pkey);
-  //EC_KEY_free(myecc);
-  //mxFree(keyFileName);
-  //mxFree(myfilename);
-
-  /* ---------------------------------------------------------- *
-   * Returning file names to matlab                             *
-   * ---------------------------------------------------------- */
-  plhs[0] = mxCreateString(signature_output);
+  plhs[0] = mxCreateString(signaturename);
 
 }
 
