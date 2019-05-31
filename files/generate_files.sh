@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This will generate 100 files of increasing size, to test our signing on
+# This will generate 50 files of increasing size, to test our signing on
 # The i-th file is named i.txt and has a size of i bytes
 # Execute this from inside the files directory
 

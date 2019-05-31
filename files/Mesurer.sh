@@ -47,9 +47,9 @@ then
 	openssl ecparam -name prime256v1 -genkey -noout -out PrivateKey.pem
 	openssl ec -in PrivateKey.pem -pubout -out PublicKey.pem &>/dev/null
     done
-    
+
     res2=$(date +%s.%N)
-    
+
     dt=$(echo "$res2 - $res1" | bc)
     dd=$(echo "$dt/86400" | bc)
     dt2=$(echo "$dt-86400*$dd" | bc)
@@ -57,7 +57,7 @@ then
     dt3=$(echo "$dt2-3600*$dh" | bc)
     dm=$(echo "$dt3/60" | bc)
     ds=$(echo "$dt3-60*$dm" | bc)
-    
+
     printf "Average generation time: %02.4f ms\n" $ds
 fi
 
@@ -68,9 +68,9 @@ then
     do
 	openssl dgst -sha256 -sign PrivateKey.pem generate_files.sh > signature.bin
     done
-    
+
     res2=$(date +%s.%N)
-    
+
     dt=$(echo "$res2 - $res1" | bc)
     dd=$(echo "$dt/86400" | bc)
     dt2=$(echo "$dt-86400*$dd" | bc)
@@ -78,7 +78,7 @@ then
     dt3=$(echo "$dt2-3600*$dh" | bc)
     dm=$(echo "$dt3/60" | bc)
     ds=$(echo "$dt3-60*$dm" | bc)
-    
+
     printf "Average signing time: %02.4f ms\n" $ds
 fi
 
@@ -89,9 +89,9 @@ then
     do
 	openssl dgst -sha256 -verify PublicKey.pem -signature signature.bin generate_files.sh &>/dev/null
     done
-    
+
     res2=$(date +%s.%N)
-    
+
     dt=$(echo "$res2 - $res1" | bc)
     dd=$(echo "$dt/86400" | bc)
     dt2=$(echo "$dt-86400*$dd" | bc)
@@ -99,6 +99,6 @@ then
     dt3=$(echo "$dt2-3600*$dh" | bc)
     dm=$(echo "$dt3/60" | bc)
     ds=$(echo "$dt3-60*$dm" | bc)
-    
+
     printf "Average verification time: %02.4f ms\n" $ds
 fi
