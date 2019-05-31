@@ -7,7 +7,7 @@
 #include "mex.h"
 
 #define ECCTYPE           "prime256v1"
-#define COPY_BUFFER_MAXSIZE 1048576
+//#define COPY_BUFFER_MAXSIZE 1048576
 //#define signaturename "mysignature.txt"
 
 /*
@@ -25,22 +25,6 @@
 // Compile with
 // mex -g genecp_nistp256.c -lssl -lcrypto -L/usr/local/opt/openssl/lib -I/usr/local/opt/openssl/include
 
-void Base64Encode( const unsigned char* buffer, 
-		   size_t length, 
-		   char** base64Text) { 
-  BIO *bio, *b64;
-  BUF_MEM *bufferPtr;
-  b64 = BIO_new(BIO_f_base64());
-  bio = BIO_new(BIO_s_mem());
-  bio = BIO_push(b64, bio);
-  BIO_write(bio, buffer, length);
-  BIO_flush(bio);
-  BIO_get_mem_ptr(bio, &bufferPtr);
-  BIO_set_close(bio, BIO_NOCLOSE);
-  BIO_free_all(bio);
-  *base64Text=(*bufferPtr).data;
-}
-
 //int main(){
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
   const mxArray *prhs[]){
@@ -57,12 +41,12 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
   int                  eccgrp;
   srand (1);
 
-  char *keyFileName;
+  unsigned char *keyFileName;
   keyFileName = mxArrayToString(prhs[0]);
-  char *myfilename;
+  unsigned char *myfilename;
   myfilename = mxArrayToString(prhs[1]);
   printf("File to sign: %s\n",myfilename);
-  char *signaturename;
+  unsigned char *signaturename;
   signaturename = mxArrayToString(prhs[2]);
   printf("File to output: %s\n",signaturename);
   
@@ -82,29 +66,30 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
   PEM_read_PrivateKey(fkey, &pkey, NULL, NULL);
   fclose(fkey);
 
-
-
   /* ---------------------------------------------------------- *
    * This reads the contents of the file to be signed           *
    * ---------------------------------------------------------- */
   char * msg = 0;
   //msg = malloc(COPY_BUFFER_MAXSIZE);
-  long length;
+  long unsigned int length;
   FILE * f = fopen (myfilename, "rb");
-  if (f)
+  if(f == NULL)
+    {
+      printf("Failed to open file: %s\n", myfilename);
+      exit(1);
+    }
+  else
     {
       fseek (f, 0, SEEK_END);
       length = ftell (f);
       fseek (f, 0, SEEK_SET);
       msg = malloc (length);
-      //printf("length saved to msg: %ld\n" , length);
       if (msg)
 	{
 	  fread (msg, 1, length, f);
 	}
       fclose (f);
     }
-  //printf("%s\n",msg);
 
   /* ---------------------------------------------------------- *
    * If there are no errors, this signs the contents of the file*
@@ -114,41 +99,43 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
     {
 
       /* Create the Message Digest Context */
-      if(!(mdctx = EVP_MD_CTX_create())) printf("There was an error\n");
+      if(!(mdctx = EVP_MD_CTX_create())) goto err;
 
       /* Initialise the DigestSign operation - SHA-256 has been selected as the message digest function in this example */
-      if (1 != EVP_DigestSignInit(mdctx, NULL, EVP_sha256(), NULL, pkey)) printf("There was an error\n");
+      if (1 != EVP_DigestSignInit(mdctx, NULL, EVP_sha256(), NULL, pkey)) goto err;
 
       /* Call update with the message */
-      if(1 != EVP_DigestSignUpdate(mdctx, msg, strlen(msg))) printf("There was an error\n");
+      if(1 != EVP_DigestSignUpdate(mdctx, msg, length)) goto err;
 
       /* Finalise the DigestSign operation */
       /* First call EVP_DigestSignFinal with a NULL sig parameter to obtain the length of the */
       /* signature. Length is returned in slen */
 
-      if(1 != EVP_DigestSignFinal(mdctx, NULL, &slen)) printf("There was an error\n");
+      if(1 != EVP_DigestSignFinal(mdctx, NULL, &slen)) goto err;
 
       /* Allocate memory for the signature based on size in slen */
-      if(!(sig = OPENSSL_malloc(sizeof(unsigned char) * (slen)))) printf("There was an error\n");
+      if(!(sig = OPENSSL_malloc(sizeof(unsigned char) * (slen)))) goto err;
 
       /* Obtain the signature */
-      if(1 != EVP_DigestSignFinal(mdctx, sig, &slen)) printf("There was an error\n");
+      if(1 != EVP_DigestSignFinal(mdctx, sig, &slen)) goto err;
 
-      FILE * fout = fopen (signaturename, "w");
+      FILE * fout = fopen (signaturename, "wb");
+      if (fout == NULL)
+	{
+	  printf("Failed to open file: %s\n", signaturename);
+	  exit(1);
+	}
       fwrite(sig,1,slen,fout);
       fclose(fout);
 
-      //char *output;
-      //Base64Encode(sig, slen, &output);
-      //printf("=====================================\n");
-      //printf("%s",output);
-      //printf("=====================================\n");
-    }
+      int sucess = 1;
 
-  /* ---------------------------------------------------------- *
-   * Returning file name to matlab                             *
-   * ---------------------------------------------------------- */
-  plhs[0] = mxCreateString(signaturename);
+    err:
+      {
+	if(sucess != 1) mexPrintf("There was an error\n");
+      }
+
+    }
 
 }
 
