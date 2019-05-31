@@ -8,12 +8,12 @@ genecp_nistp(curve, pub_key_file, priv_key_file);
 t1 = toc;
 fprintf('Mean time required to generate keys is : %fs\n', t1)
 %% Signing file with previous keys
-file = 'main_script.m';
-sigfile = 'try.txt';
+file = './files/1.txt';
+sigfile = './files/1.txt.sha256';
 tic
 digital_signature(priv_key_file,file,sigfile);
 t2 = toc;
-fprintf('Time required for signature is : %fs\n', t2)
+fprintf('Time required for signature is : %fms\n%s\n', t2*1000,signature);
 %% Verify signature
 tic
 verif_state = verify_signature(pub_key_file, file, sigfile);

@@ -9,9 +9,9 @@
 // #include "mex.h"
 
 #define ECCTYPE  "prime256v1"
-#define filename "../file_to_sign.txt"
-#define signed_file "../file_to_sign.txt.sha256"
-#define keyFileName "../PublicKey.pem"
+#define filename "../files/1.txt"
+#define signed_file "../files/1.txt.sha256"
+#define keyFileName "../PublicKey256.pem"
 
 /* Still working on the signing part, just made sure the files are
 read correctly and all variables are there */
@@ -22,8 +22,7 @@ int main(){
 
   clock_t start = clock();
 
-  for (size_t i = 0; i < 1000; i++)
-  {
+  // for (size_t i = 0; i < 1000; i++) {
     BIO                  *inbio = NULL;
     EVP_PKEY             *pkey   = NULL;
     EC_KEY               *myecc  = NULL;
@@ -32,6 +31,8 @@ int main(){
     long unsigned int    slen;
     int                  success = 0;
     int                  eccgrp;
+
+    printf("%s\n%s\n%s\n",keyFileName,filename,signed_file);
 
     OpenSSL_add_all_algorithms();
     ERR_load_BIO_strings();
@@ -62,7 +63,7 @@ int main(){
       {
         fseek (f, 0, SEEK_END);
         length = ftell (f);
-        // printf("f tell msg = %ld\n",length);
+        printf("f tell msg = %ld\n",length);
         fseek (f, 0, SEEK_SET);
         msg = malloc (length);
         if (msg)
@@ -79,7 +80,7 @@ int main(){
       {
         fseek (f, 0, SEEK_END);
         slen = ftell (f);
-        // printf("f tell sig = %ld\n",slen);
+        printf("f tell sig = %ld\n",slen);
         fseek (f, 0, SEEK_SET);
         sig = malloc (slen);
         if (sig)
@@ -119,7 +120,7 @@ int main(){
         and another value if there was an error */
       verif_result =  EVP_DigestVerifyFinal(mdctx, sig, slen);
       if(1 == verif_result){
-        // printf("Verified OK\n");
+        printf("Verified OK\n");
         // mexPrintf("Verified OK\n");
       }
       else if(verif_result == 0) {
@@ -140,7 +141,7 @@ int main(){
       }
     }
 
-  }
+  // }
 
   clock_t end = clock();
   float seconds = (float)(end - start) / CLOCKS_PER_SEC;
