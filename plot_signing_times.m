@@ -1,4 +1,4 @@
-mer%% Compiling Mex Files
+%% Compiling Mex Files
 buildMex();
 %% Choose EC Curve
 [curve, pub_key_file, priv_key_file] = menu_chose_function();
