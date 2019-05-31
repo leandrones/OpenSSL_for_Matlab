@@ -13,9 +13,9 @@ verifying_times = zeros(1,N);
 signing_sizes = 1:N;
 
 %%
-for i = 1:N
+for i = 1:1
     file = strcat('./files/',rptgen.toString(i),'.txt');
-    signature = strcat('./files/',rptgen.toString(i),'.sha256');
+    signature = strcat('./files/',rptgen.toString(i),'.txt.sha256');
     %file = 'testfile.txt'
     tic
     [signature] = digital_signature(priv_key_file,file,signature);

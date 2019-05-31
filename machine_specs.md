@@ -1,5 +1,12 @@
 # System Specs
 
+## Leandro
++ Ubuntu 18.04 (kernel Linux 4.15)
++ Machine Dell Inspiron 7410
++ Intel Core i7-7500U
++ Graphics card NVidia GeForce 940MX
++ 16GB of RAM Memory
+
 ## Matheus
 + Arch Linux (Kernel Linux 5.1.4 arch x64)
   + Machine Inspiron 3542
