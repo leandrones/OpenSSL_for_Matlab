@@ -24,7 +24,7 @@ function buildMex(enblDbg)
     
     if(ispc()) 
         fprintf(1,'Building PC...\n');
-        options = [' C:\openssl\lib\libeay32.lib -IC:\openssl\include ' options];
+        options = [' C:\OpenSSL-Win64\lib\libeay32.lib -IC:\OpenSSL-Win64\include ' options];
     elseif(ismac())
         fprintf(1,'Building Mac...\n');
         options = [options ' -L/usr/local/opt/openssl/lib -I/usr/local/opt/openssl/include -lssl -lcrypto '];

@@ -6,7 +6,7 @@ buildMex();
 tic
 genecp_nistp(curve, pub_key_file, priv_key_file);
 t1 = toc;
-
+%%
 N = 50
 signing_times = zeros(1,N);
 verifying_times = zeros(1,N);
