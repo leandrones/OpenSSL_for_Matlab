@@ -13,7 +13,7 @@ sigfile = './files/1.txt.sha256';
 tic
 digital_signature(priv_key_file,file,sigfile);
 t2 = toc;
-fprintf('Time required for signature is : %fms\n%s\n', t2*1000,signature);
+fprintf('Time required for signature is : %fms\n%s\n', t2*1000,sigfile);
 %% Verify signature
 tic
 verif_state = verify_signature(pub_key_file, file, sigfile);
@@ -24,7 +24,7 @@ fprintf('Time required to verify signature : %fs result = %i\n\n', t3, verif_sta
 t3 = 0;
 for i = 1:1000
     tic
-    digital_signature(priv_key_file, file,signature);
+    digital_signature(priv_key_file, file,sigfile);
     t3 = t3 + toc;
 end
 t3 = t3/1000;

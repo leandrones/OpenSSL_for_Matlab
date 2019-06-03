@@ -66,7 +66,7 @@ then
     res1=$(date +%s.%N)
     for i in  {0..1000..1}
     do
-	openssl dgst -sha256 -sign PrivateKey.pem generate_files.sh > signature.bin
+	openssl dgst -sha256 -sign PrivateKey.pem 1.txt > 1.bin
     done
 
     res2=$(date +%s.%N)
@@ -87,7 +87,7 @@ then
     res1=$(date +%s.%N)
     for i in  {0..1000..1}
     do
-	openssl dgst -sha256 -verify PublicKey.pem -signature signature.bin generate_files.sh &>/dev/null
+	openssl dgst -sha256 -verify PublicKey.pem -signature 1.bin 1.txt &>/dev/null
     done
 
     res2=$(date +%s.%N)
