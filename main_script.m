@@ -11,14 +11,13 @@ for i = 1:1000
 end
 fprintf('Mean time required to generate keys is : %fms\n', sum(T1))
 %% Loading C data 
-gendata = csvread('genData.txt');
-plot(1:1000,T*1000)
-hold on
-plot(1:1000,gendata(1:1000));
-mean(T*1000)
-mean(gendata)
+%gendata = csvread('genData.txt');
+%plot(1:1000,T*1000)
+%hold on
+%plot(1:1000,gendata(1:1000));
+%mean(T*1000)
+%mean(gendata)
 %% Signing file with previous keys
-<<<<<<< HEAD
 file = './files/1.txt';
 sigfile = './files/1.txt.sha256';
 T2 = ones(1,1000);
@@ -28,20 +27,18 @@ for i = 1:1000
     T2(i) = toc;
 end
 fprintf('Time required for signature is : %fms\n%s\n', sum(T2),sigfile);
-=======
 file = 'files/1.txt';
 sigfile = 'files/1.txt.sha256';
 tic
 digital_signature(priv_key_file,file,sigfile);
 t2 = toc;
 fprintf('Time required for signature is : %fms\n%s\n', t2*1000,sigfile);
->>>>>>> 9159b3a524cbdaa2016505c7ca7682c465fce994
 %% Verify signature
 T3 = ones(1,1000);
 for i = 1:1000
     tic
     verif_state = verify_signature(pub_key_file, file, sigfile);
-    T2(i) = toc;
+    T3(i) = toc;
 end
 fprintf('Time required to verify signature : %fs ms result = %i\n\n', sum(T3), verif_state);
 %%
@@ -55,4 +52,4 @@ end
 t3 = t3/1000;
 fprintf('Mean time required to sign is : %fs\n', t3);
 %% Ploting glabal parameters
-fprintf("Total elapsed time is %fs\n", t1/1000+t2+t3/1000);
+%fprintf("Total elapsed time is %fs\n", t1/1000+t2+t3/1000);
