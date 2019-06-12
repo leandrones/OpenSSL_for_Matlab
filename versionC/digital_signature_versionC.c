@@ -129,7 +129,7 @@ int main(){
       tableau[i] =cpu_time_used;
 
     }
-    FILE *f = fopen("signData_mac256.txt", "w");
+    FILE *f = fopen("signData_linux256.txt", "w");
     for(i=0;i<1000;i++){
         fprintf(f,"%f,",tableau[i] );
     }

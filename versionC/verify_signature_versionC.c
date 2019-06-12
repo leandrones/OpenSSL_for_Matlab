@@ -150,7 +150,7 @@ int main(){
        cpu_time_used = (((double) (end - start)) / (CLOCKS_PER_SEC))*1000;
        tableau[i] =cpu_time_used;
   }
-    FILE *f = fopen("verify_data_time_256mac.txt", "w");
+    FILE *f = fopen("verify_data_time_256linux.txt", "w");
     for(i=0;i<1000;i++){
         fprintf(f,"%f,",tableau[i] );
     }
