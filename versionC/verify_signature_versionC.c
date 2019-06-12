@@ -38,7 +38,7 @@ int main(){
     int                  success = 0;
     int                  eccgrp;
 
-    printf("%s\n%s\n%s\n",keyFileName,filename,signed_file);
+    //printf("%s\n%s\n%s\n",keyFileName,filename,signed_file);
 
     OpenSSL_add_all_algorithms();
     ERR_load_BIO_strings();
@@ -69,7 +69,7 @@ int main(){
       {
         fseek (f, 0, SEEK_END);
         length = ftell (f);
-        printf("f tell msg = %ld\n",length);
+        //printf("f tell msg = %ld\n",length);
         fseek (f, 0, SEEK_SET);
         msg = malloc (length);
         if (msg)
@@ -86,7 +86,7 @@ int main(){
       {
         fseek (f, 0, SEEK_END);
         slen = ftell (f);
-        printf("f tell sig = %ld\n",slen);
+        //printf("f tell sig = %ld\n",slen);
         fseek (f, 0, SEEK_SET);
         sig = malloc (slen);
         if (sig)
@@ -126,11 +126,11 @@ int main(){
         and another value if there was an error */
       verif_result =  EVP_DigestVerifyFinal(mdctx, sig, slen);
       if(1 == verif_result){
-        printf("Verified OK\n");
+        //printf("Verified OK\n");
         // mexPrintf("Verified OK\n");
       }
       else if(verif_result == 0) {
-        printf("Verification Failure\n");
+          //printf("Verification Failure\n");
         // mexPrintf("Verification Failure\n");
       }
       else{
@@ -142,7 +142,7 @@ int main(){
     err:
       if(success != 1)
       {
-        printf("There was an error\n");
+        //printf("There was an error\n");
         // mexPrintf("There was an error\n");
       }
     }

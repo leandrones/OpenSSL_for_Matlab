@@ -34,7 +34,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
   char *signed_file;
   signed_file = mxArrayToString(prhs[2]);
 
-  printf("%s\n%s\n%s\n",keyFileName,filename,signed_file);
+  //printf("%s\n%s\n%s\n",keyFileName,filename,signed_file);
 
   /* ---------------------------------------------------------- *
    * These function calls initialize openssl for correct work.  *
@@ -68,7 +68,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
   {
     fseek(f, 0, SEEK_END);
     length = ftell(f);
-    printf("f tell msg = %ld\n", length);
+    //printf("f tell msg = %ld\n", length);
     fseek(f, 0, SEEK_SET);
     msg = malloc(length);
     if (msg)
@@ -85,7 +85,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
   {
     fseek(f, 0, SEEK_END);
     slen = ftell(f);
-    printf("f tell sig = %ld\n", slen);
+      //#printf("f tell sig = %ld\n", slen);
     fseek(f, 0, SEEK_SET);
     sig = malloc(slen);
     if (sig)
@@ -130,12 +130,12 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
     if (1 == verif_result)
     {
       //printf("Verified OK\n");
-      mexPrintf("Verified OK\n");
+      //mexPrintf("Verified OK\n");
     }
     else if (verif_result == 0)
     {
       // printf("Verification Failure\n");
-      mexPrintf("Verification Failure\n");
+      //mexPrintf("Verification Failure\n");
     }
     else
     {
