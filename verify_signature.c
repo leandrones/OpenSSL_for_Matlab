@@ -130,12 +130,12 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
     if (1 == verif_result)
     {
       //printf("Verified OK\n");
-      mexPrintf("Verified OK\n");
+      //mexPrintf("Verified OK\n");
     }
     else if (verif_result == 0)
     {
       // printf("Verification Failure\n");
-      mexPrintf("Verification Failure\n");
+      //mexPrintf("Verification Failure\n");
     }
     else
     {
