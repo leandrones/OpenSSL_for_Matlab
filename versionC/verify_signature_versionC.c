@@ -20,9 +20,15 @@ int main(){
 // void mexFunction(int nlhs, mxArray *plhs[], int nrhs, 
   // const mxArray *prhs[]){
 
-  clock_t start = clock();
+    /* ------ Variable initialisation ------- */
+    clock_t start, end;
+    double cpu_time_used;
+    double tableau[1000];
+    int i;
 
-  // for (size_t i = 0; i < 1000; i++) {
+   for (size_t i = 0; i < 1000; i++) {
+    start = clock();
+       
     BIO                  *inbio = NULL;
     EVP_PKEY             *pkey   = NULL;
     EC_KEY               *myecc  = NULL;
@@ -140,10 +146,15 @@ int main(){
         // mexPrintf("There was an error\n");
       }
     }
-
-  // }
-
-  clock_t end = clock();
-  float seconds = (float)(end - start) / CLOCKS_PER_SEC;
-  printf("Mean time required to verify signature on C is = %f ms\n",seconds);
+       end = clock();
+       cpu_time_used = (((double) (end - start)) / (CLOCKS_PER_SEC))*1000;
+       tableau[i] =cpu_time_used;
+  }
+    FILE *f = fopen("verify_data_time_256mac.txt", "w");
+    for(i=0;i<1000;i++){
+        fprintf(f,"%f,",tableau[i] );
+    }
+    fclose(f);
+    
 }
+

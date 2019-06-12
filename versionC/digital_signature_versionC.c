@@ -23,9 +23,14 @@ int main(){
   unsigned char        *sig;
   long unsigned int    slen;
 
-  clock_t start = clock();
-  for (size_t i = 0; i < 1000; i++) {
+    /* ------ Variable initialisation ------- */
+    clock_t start, end;
+    double cpu_time_used;
+    double tableau[1000];
+    int i;
     
+  for (size_t i = 0; i < 1000; i++) {
+    start = clock();
     pkey = NULL;
     mdctx =  NULL;
     sig = NULL;
@@ -119,12 +124,15 @@ int main(){
     if(*sig) OPENSSL_free(sig);
     if(mdctx) EVP_MD_CTX_destroy(mdctx);
     EVP_PKEY_free(pkey);
+      end = clock();
+      cpu_time_used = (((double) (end - start)) / (CLOCKS_PER_SEC))*1000;
+      tableau[i] =cpu_time_used;
 
     }
-
-  clock_t end = clock();
-  float seconds = (float)(end - start) / CLOCKS_PER_SEC;
-  printf("Average time required to sign a file on C is = %f ms\n",seconds);
+    FILE *f = fopen("signData_mac256.txt", "w");
+    for(i=0;i<1000;i++){
+        fprintf(f,"%f,",tableau[i] );
+    }
+    fclose(f);
 
 }
-

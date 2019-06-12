@@ -6,5 +6,7 @@
 
 for i in `seq 1 50`
 do
-    dd if=/dev/urandom of="$i.txt"  bs=1M  count="$i"
+    VAR1=$i
+    VAR1+="M"
+    mkfile $VAR1 $i.txt
 done

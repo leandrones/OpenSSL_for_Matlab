@@ -103,28 +103,3 @@ void generate() {
 }
 
 
-int main(){
-    
-    /* ------ Variable initialisation ------- */
-    clock_t start, end;
-    double cpu_time_used;
-    double tableau[1000];
-    int i;
- 
-    /* ------------ Start timing ------------ */
-    for (i=0; i< 1000; i++){
-        start = clock();
-        generate();
-        end = clock();
-        cpu_time_used = (((double) (end - start)) / (CLOCKS_PER_SEC))*1000;
-        tableau[i] =cpu_time_used;
-    }
-    /* ------------- End timing ------------- */
-    
-    FILE *f = fopen("genData.txt", "w");
-    for(i=0;i<1000;i++){
-        fprintf(f,"%f,",tableau[i] );
-    }
-    fclose(f);
-    
-}
