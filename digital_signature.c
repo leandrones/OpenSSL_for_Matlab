@@ -45,10 +45,8 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
   keyFileName = mxArrayToString(prhs[0]);
   unsigned char *myfilename;
   myfilename = mxArrayToString(prhs[1]);
-  printf("File to sign: %s\n",myfilename);
   unsigned char *signaturename;
   signaturename = mxArrayToString(prhs[2]);
-  printf("File to output: %s\n",signaturename);
   
 
   /* ---------------------------------------------------------- *
