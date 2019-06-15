@@ -34,12 +34,10 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
    * ---------------------------------------------------------- */
 
   EVP_PKEY             *pkey   = NULL;
-  EC_KEY               *myecc  = NULL;
   EVP_MD_CTX           *mdctx = NULL;
   unsigned char        *sig = NULL;
   long unsigned int    slen;
-  int                  eccgrp;
-  srand (1);
+  //srand (1);
 
   unsigned char *keyFileName;
   keyFileName = mxArrayToString(prhs[0]);
@@ -68,7 +66,6 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
    * This reads the contents of the file to be signed           *
    * ---------------------------------------------------------- */
   char * msg = 0;
-  //msg = malloc(COPY_BUFFER_MAXSIZE);
   long unsigned int length;
   FILE * f = fopen (myfilename, "rb");
   if(f == NULL)
@@ -136,4 +133,3 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
     }
 
 }
-

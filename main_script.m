@@ -7,7 +7,7 @@ T4 = ones(1,1000);
 for i = 1:1000
     tic
     genecp_nistp(curve, pub_key_file, priv_key_file);
-    T4(i) = toc;
+    T1(i) = toc;
 end
 fprintf('Mean time required to generate keys is : %fms\n', sum(T1))
 %% Loading C data 
