@@ -3,21 +3,30 @@ buildMex();
 %% Choose EC Curve
 [curve, pub_key_file, priv_key_file] = menu_chose_function();
 %% Generating keys
-T = ones(1,1000);
+T1 = ones(1,1000);
 for i = 1:1000
     tic
     genecp_nistp(curve, pub_key_file, priv_key_file);
-    T(i) = toc;
+    T1(i) = toc;
 end
-% fprintf('Mean time required to generate keys is : %fms\n', t3)
+fprintf('Mean time required to generate keys is : %fms\n', sum(T1))
 %% Loading C data 
 gendata = csvread('genData.txt');
 plot(1:1000,T*1000)
 hold on
 plot(1:1000,gendata(1:1000));
-mean(T*1000)
-mean(gendata)
+%mean(T*1000)
+%mean(gendata)
 %% Signing file with previous keys
+file = './files/1.txt';
+sigfile = './files/1.txt.sha256';
+T2 = ones(1,1000);
+for i = 1:1000
+    tic
+    digital_signature(priv_key_file,file,sigfile);
+    T2(i) = toc;
+end
+fprintf('Time required for signature is : %fms\n%s\n', sum(T2),sigfile);
 file = 'files/1.txt';
 sigfile = 'files/1.txt.sha256';
 tic
@@ -33,10 +42,13 @@ for i = 1:1000
 end
 % fprintf('Mean time required to generate keys is : %fms\n', t3)
 %% Verify signature
-tic
-verif_state = verify_signature(pub_key_file, file, sigfile);
-t3 = toc;
-fprintf('Time required to verify signature : %fs result = %i\n\n', t3, verif_state);
+T3 = ones(1,1000);
+for i = 1:1000
+    tic
+    verif_state = verify_signature(pub_key_file, file, sigfile);
+    T3(i) = toc;
+end
+fprintf('Time required to verify signature : %fs ms result = %i\n\n', sum(T3), verif_state);
 %%
 
 %Mean time verify signature
@@ -49,4 +61,4 @@ end
 t3 = t3/1000;
 fprintf('Mean time required to sign is : %fs\n', t3);
 %% Ploting glabal parameters
-fprintf("Total elapsed time is %fs\n", t1/1000+t2+t3/1000);
+%fprintf("Total elapsed time is %fs\n", t1/1000+t2+t3/1000);
