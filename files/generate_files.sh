@@ -17,7 +17,7 @@ then
 fi
 
 # Parse the command line arguments
-while getopts gsv OPTION
+while getopts ml OPTION
     do
     case ${OPTION} in
 	m)
