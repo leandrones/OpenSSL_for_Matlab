@@ -50,7 +50,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
   // inbio = BIO_new_fp(stdout, BIO_NOCLOSE);
 
   /* ---------------------------------------------------------- *
-   * Read private key from file                                 *
+   * Read public key from file                                 *
    * ---------------------------------------------------------- */
   FILE *fkey;
   fkey = fopen(keyFileName, "rb");

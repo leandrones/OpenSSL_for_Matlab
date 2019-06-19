@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # This will generate 50 files of increasing size, to test our signing on
-# The i-th file is named i.txt and has a size of i bytes
+# The i-th file is named i.txt and has a size of i MB
 # Execute this from inside the files directory
 
 function usage_statement {
-    echo "USAGE: $(basename ${0}) -gsv" >&2
+    echo "USAGE: $(basename ${0}) -ml" >&2
     echo '    -m Generates files on a Mac machine' >&2
     echo '    -l Generates files on a Linux machine' >&2
     exit 1
@@ -17,7 +17,7 @@ then
 fi
 
 # Parse the command line arguments
-while getopts gsv OPTION
+while getopts ml OPTION
     do
     case ${OPTION} in
 	m)
@@ -47,6 +47,6 @@ do
 
     if [[ "${LINUX}" = 'true' ]]
     then
-	dd if=/dev/urandom of="${i}.txt"
+	dd if=/dev/urandom of="${i}.txt" bs=1M count="$i"
     fi
 done

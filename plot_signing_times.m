@@ -11,18 +11,28 @@ N = 50
 signing_times = zeros(1,N);
 verifying_times = zeros(1,N);
 signing_sizes = 1:N;
+average_repetitions = 1000
 
-%%
+%% Signature average times
 for i = 1:N
     file = strcat('files/',rptgen.toString(i),'.txt');
     signature = strcat('files/',rptgen.toString(i),'.bin');
-    %file = 'testfile.txt'
     tic
-    digital_signature(priv_key_file,file,signature);
-    signing_times(1,i) = toc; 
+    for j = 1:average_repetitions
+	      digital_signature(priv_key_file,file,signature);
+    end
+    signing_times(1,i) = toc/average_repetitions;
+end
+
+%% Verification average times
+for i = 1:N
+    file = strcat('files/',rptgen.toString(i),'.txt');
+    signature = strcat('files/',rptgen.toString(i),'.bin');
     tic
-    verif_state = verify_signature(pub_key_file,file,signature)
-    verifying_times(1,i) = toc;
+    for j = 1:average_repetitions
+        verif_state = verify_signature(pub_key_file,file,signature);
+    end
+	verifying_times(1,i) = toc/average_repetitions;
 end
 
 %%

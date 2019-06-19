@@ -4,7 +4,7 @@
 #include <openssl/pem.h>
 #include <time.h>
 
-#define ECCTYPE    "prime256v1"
+#define ECCTYPE    "secp384r1"
 
 void generate() {
     
