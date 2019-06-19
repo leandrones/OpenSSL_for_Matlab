@@ -12,11 +12,11 @@ end
 fprintf('Mean time required to generate keys is : %fms\n', sum(T1))
 %% Loading C data 
 gendata = csvread('genData.txt');
-plot(1:1000,T*1000)
+plot(1:1000,T1*1000)
 hold on
 plot(1:1000,gendata(1:1000));
-%mean(T*1000)
-%mean(gendata)
+% mean(T1*1000)
+% mean(gendata)
 %% Signing file with previous keys
 file = './files/1.txt';
 sigfile = './files/1.txt.sha256';
@@ -44,11 +44,16 @@ end
 %% Verify signature
 T3 = ones(1,1000);
 for i = 1:1000
-    tic
+    tic;
     verif_state = verify_signature(pub_key_file, file, sigfile);
     T3(i) = toc;
 end
 fprintf('Time required to verify signature : %fs ms result = %i\n\n', sum(T3), verif_state);
+%%
+gendata = csvread('data/ubuntu/C/verify_data_time_256ubu.txt');
+plot(1:1000,T3*1000)
+hold on
+plot(1:1000,gendata(1:1000));
 %%
 
 %Mean time verify signature
