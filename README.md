@@ -84,10 +84,10 @@ private key size can be any of the four supported.
 ## versionC/Makefile
 For comparison, we can also execute the same kind of cryptographic operations using C code and the openSSL library. versionC/ contains equivalents
 for most of the .m scripts in C. The source code can be compiled
-(requires gcc as C compiler) using make <name> where <name> can be
+(requires gcc as C compiler) using make where the argument can be
 one of the following:
 
-+ gen -> Creates executable genecp_nistp256_versionC, which calculates key generation times for a 256 key and calculates a time average out of 1000 iterations 
++ gen -> Creates executable genecp_nistp256_versionC, which calculates key generation times for a 256 key and calculates a time average out of 1000 iterations
 + sign -> Creates executable digital_signature_versionC, which calculates signature times and calculates a time average out of 1000 iterations
 + verif -> Creates executable verify_signature_versionC which calculates verification times and calculates a time average out of 1000 iterations
 + sign_size -> Creates executable digital_signature_filesize, which generates a text file containing the first iteration's signature time for each file size going from 1MB to 40MB.
