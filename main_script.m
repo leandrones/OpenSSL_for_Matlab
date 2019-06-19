@@ -34,15 +34,29 @@ tic
 digital_signature(priv_key_file,file,sigfile);
 t2 = toc;
 fprintf('Time required for signature is : %fms\n%s\n', t2*1000,sigfile);
+%%
+T = ones(1,1000);
+for i = 1:1000
+    tic
+    digital_signature(priv_key_file,file,sigfile);
+    T(i) = toc;
+end
+% fprintf('Mean time required to generate keys is : %fms\n', t3)
 %% Verify signature
 T3 = ones(1,1000);
 for i = 1:1000
-    tic
+    tic;
     verif_state = verify_signature(pub_key_file, file, sigfile);
     T3(i) = toc;
 end
 fprintf('Time required to verify signature : %fs ms result = %i\n\n', sum(T3), verif_state);
 %%
+gendata = csvread('data/ubuntu/C/verify_data_time_256ubu.txt');
+plot(1:1000,T3*1000)
+hold on
+plot(1:1000,gendata(1:1000));
+%%
+
 %Mean time verify signature
 t3 = 0;
 for i = 1:1000
