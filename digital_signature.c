@@ -71,7 +71,6 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs,
   if(f == NULL)
     {
       printf("Failed to open file: %s\n", myfilename);
-      exit(1);
     }
   else
     {

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This will generate 50 files of increasing size, to test our signing on
+# This will generate 40 files of increasing size, to test our signing on
 # The i-th file is named i.txt and has a size of i MB
 # Execute this from inside the files directory
 
@@ -36,13 +36,11 @@ while getopts ml OPTION
 done
 
 
-for i in `seq 1 50`
+for i in `seq 1 40`
 do
     if [[ "${MAC}" = 'true' ]]
     then
-	VAR1=$i
-	VAR1+="M"
-	mkfile $VAR1 $i.txt
+	mkfile "${i}M" $i.txt
     fi
 
     if [[ "${LINUX}" = 'true' ]]
