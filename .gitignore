@@ -11,5 +11,8 @@ files/*.bin
 # For compiled mex files
 *.mex*
 
+# For compiled stuff in c
+*.o
+
 # For Emacs' autosaves
 *~

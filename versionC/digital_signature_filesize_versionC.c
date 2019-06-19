@@ -135,7 +135,7 @@ int main(){
       tableau[i] =cpu_time_used;
 
     }
-    FILE *f = fopen("signData_filesize_c.txt", "w");
+    FILE *f = fopen("signData_filesize_c.txt", "w+");
     for(i=1;i<40;i++){
         fprintf(f,"%f,",tableau[i] );
     }
