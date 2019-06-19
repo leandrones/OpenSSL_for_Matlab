@@ -7,8 +7,6 @@
 #include <time.h>
 
 #define ECCTYPE           "prime256v1"
-#define myfilename "../files/1.txt"
-#define signaturename "../files/1.txt.sha256"
 #define keyFileName "../PrivateKey256.pem"
 
 
@@ -22,15 +20,21 @@ int main(){
   EVP_MD_CTX           *mdctx;
   unsigned char        *sig;
   long unsigned int    slen;
+  char myfilename [20];
+  char signaturename [30];
 
     /* ------ Variable initialisation ------- */
     clock_t start, end;
     double cpu_time_used;
-    double tableau[1000];
+    double tableau[40];
     int i;
     
-  for (size_t i = 0; i < 1000; i++) {
+    for (size_t i = 1; i <= 40 ; i++) {
 
+
+    sprintf(myfilename, "../files/%lu.txt",i);
+    sprintf(signaturename, "../files/%lu.txt.sha256",i);
+    //printf("%s\n",myfilename);
     start = clock();
     pkey = NULL;
     mdctx =  NULL;
@@ -131,8 +135,8 @@ int main(){
       tableau[i] =cpu_time_used;
 
     }
-    FILE *f = fopen("signData_linux256.txt", "w");
-    for(i=0;i<1000;i++){
+    FILE *f = fopen("signData_filesize_c.txt", "w");
+    for(i=1;i<40;i++){
         fprintf(f,"%f,",tableau[i] );
     }
     fclose(f);

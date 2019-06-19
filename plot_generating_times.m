@@ -8,7 +8,7 @@ sizes = [ 224 , 256, 384, 521 ];
 iteration_number = 100;
 generating_times = zeros(1,4);
 priv_key_file = 'files/testPrivKey.pem';
-pub_key_file  = 'files/testPubKey.pem';
+pub_key_file  = 'files/testPubKey.peem';
 
 for i = 1:(length(curves))
     
